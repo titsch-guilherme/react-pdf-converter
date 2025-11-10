@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      target: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+      - VITE_ENABLE_DEBUG=true
+      - VITE_ENABLE_MOCK_API=true
+    networks:
+      - pdf-converter-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  frontend-prod:
+    build:
+      context: .
+      target: production
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_BASE_URL=http://backend:8000
+    networks:
+      - pdf-converter-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+    profiles:
+      - production
+
+  backend:
+    image: python:3.11-alpine
+    ports:
+      - "8000:8000"
+    command: echo "Backend service placeholder - will be implemented in Story 02"
+    networks:
+      - pdf-converter-network
+    restart: unless-stopped
+
+networks:
+  pdf-converter-network:
+    driver: bridge
+    name: pdf-converter-network

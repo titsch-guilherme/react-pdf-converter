@@ -7,8 +7,9 @@ This directory contains 13 implementation stories that break down the PDF OCR Co
 ### Foundation Stories (Infrastructure + Basic Shell)
 These stories establish the foundation and create an immediately usable application:
 
-1. **[Implementation Story 01: Frontend Application Bootstrap](implementation_story_01.md)**
+1. **[Implementation Story 01: Frontend Application Bootstrap](implementation_story_01.md)** 🔄 **UPDATED**
    - React.js application setup with TypeScript, Material-UI, testing, and tooling
+   - **Updated with latest library versions and modern tooling (Vite preferred)**
    - **Duration:** 2 days | **Priority:** Critical
 
 2. **[Implementation Story 01.1: Basic Application Layout and Shell](implementation_story_01_1.md)** ⭐ **NEW**
@@ -71,10 +72,28 @@ This story ensures production readiness:
     - Comprehensive testing, performance optimization, and security validation
     - **Duration:** 5 days | **Priority:** Critical
 
+## Latest Updates (January 2025)
+
+### 🔄 **Story 01 Major Updates:**
+- **React 19.2.0**: Updated to latest stable version
+- **Material-UI 7.3.5**: Updated to latest version with Emotion dependencies
+- **Vite 7.2.2**: Recommended over Create React App for better performance
+- **TypeScript 5.9.3**: Latest stable version with improved React 19 support
+- **React Router 7.9.5**: Updated to latest version
+- **Testing Libraries**: Updated to latest versions for React 19 compatibility
+- **ESLint 9.39.1 & Prettier 3.6.2**: Latest code quality tools
+
+### 🆕 **New Requirements Added:**
+- **Vite Configuration**: Preferred build tool with optimized setup
+- **Path Aliases**: Absolute imports configuration
+- **Performance Monitoring**: Web Vitals integration
+- **Modern TypeScript**: Strict mode with latest features
+- **Enhanced Docker**: Multi-stage builds for development and production
+
 ## Sprint Planning (Updated)
 
 ### Sprint 1 (Foundation + Authentication) - 11 days
-- Story 01: Frontend Bootstrap (2 days)
+- Story 01: Frontend Bootstrap (2 days) 🔄 **Updated with latest versions**
 - Story 01.1: Basic Application Shell (1 day) ⭐ **NEW**
 - Story 02: Backend Bootstrap (2 days)
 - Story 03: Frontend Authentication (3 days) 🔄 **Enhanced**
@@ -94,33 +113,74 @@ This story ensures production readiness:
 
 **Total Estimated Duration:** 40 days (approximately 8 weeks)
 
+## Technology Stack Updates
+
+### Frontend (Updated Versions)
+- **Node.js:** v20.x LTS (unchanged)
+- **React:** ^19.2.0 ⬆️ (from ^18.x)
+- **TypeScript:** ^5.9.3 ⬆️ (from ^5.x)
+- **Material-UI:** ^7.3.5 ⬆️ (from ^5.x)
+- **React Router:** ^7.9.5 ⬆️ (from ^6.x)
+- **Vite:** ^7.2.2 🆕 (preferred over CRA)
+- **React Toastify:** ^11.0.5 ⬆️ (from ^9.x)
+- **Testing Library:** ^16.3.0 ⬆️ (latest)
+- **Jest:** ^30.2.0 ⬆️ (latest)
+- **ESLint:** ^9.39.1 ⬆️ (latest)
+- **Prettier:** ^3.6.2 ⬆️ (latest)
+
+### New Dependencies Added
+- **@emotion/react:** ^11.14.0 (required for MUI v7)
+- **@emotion/styled:** ^11.14.1 (required for MUI v7)
+- **@vitejs/plugin-react:** ^5.1.0 (Vite React plugin)
+- **web-vitals:** ^5.1.0 (performance monitoring)
+- **husky:** ^9.1.7 (Git hooks)
+- **lint-staged:** ^15.2.11 (staged file linting)
+
 ## Key Improvements in Updated Structure
 
-### ✅ **Immediate Usability**
-- Working application available after Story 01.1 (Day 3)
-- Each subsequent story enhances rather than replaces existing functionality
-- Continuous integration and testing possible from the start
+### ✅ **Modern Tooling**
+- Vite for faster development and build times
+- Latest React 19 with improved performance and features
+- Material-UI v7 with enhanced theming and components
+- Modern TypeScript with strict mode and better React support
 
-### ✅ **Incremental Development**
-- Each story builds on the previous foundation
-- Placeholder components clearly show implementation progress
-- Features can be demonstrated immediately upon completion
+### ✅ **Enhanced Developer Experience**
+- Hot module replacement with Vite
+- Absolute imports with path aliases
+- Pre-commit hooks for code quality
+- Comprehensive linting and formatting
 
-### ✅ **Reduced Integration Risk**
-- No "big bang" integration at the end
-- Each feature integrates into existing, tested application shell
-- Continuous validation of user experience
+### ✅ **Performance Optimizations**
+- Web Vitals monitoring built-in
+- Bundle analysis tools configured
+- Optimized Docker builds
+- Code splitting preparation
 
-### ✅ **Better Team Collaboration**
-- Frontend and backend teams can work in parallel from Day 1
-- Clear integration points defined in each story
-- Shared understanding of application structure
+### ✅ **Better Testing**
+- Latest testing libraries with React 19 support
+- Enhanced coverage reporting
+- User event testing utilities
+- E2E testing preparation
+
+## Migration Considerations
+
+### From Previous Versions:
+1. **React 18 → 19**: New JSX transform, improved concurrent features
+2. **Material-UI 5 → 7**: Emotion dependencies required, theming updates
+3. **Create React App → Vite**: Environment variables use VITE_ prefix
+4. **React Router 6 → 7**: Enhanced data loading and error handling
+
+### Breaking Changes to Watch:
+- Material-UI v7 may have breaking changes from v5
+- React 19 may affect some third-party libraries
+- Vite uses different environment variable naming
+- ESLint 9 has configuration changes
 
 ## Dependencies (Updated)
 
 ### Critical Path
 ```
-Story 01 → Story 01.1 → Story 03 → Story 05 → Story 11
+Story 01 (Updated) → Story 01.1 → Story 03 → Story 05 → Story 11
 Story 02 → Story 04 → Story 06 → Story 07 → Story 08 → Story 09
 Story 03 + Story 09 → Story 10
 All Stories → Story 12
@@ -135,11 +195,11 @@ All Stories → Story 12
 
 ## Application Evolution Timeline
 
-### Day 3 (After Story 01.1): **Usable Application Shell**
-- ✅ Working React application with navigation
-- ✅ Responsive layout with placeholder components
-- ✅ Error handling and basic routing
-- ✅ Ready for feature integration
+### Day 3 (After Story 01.1): **Modern Application Shell**
+- ✅ Working React 19 application with Vite
+- ✅ Material-UI v7 with modern theming
+- ✅ TypeScript strict mode enabled
+- ✅ Performance monitoring ready
 
 ### Day 6 (After Story 03): **Authenticated Application**
 - ✅ Google OAuth login working
@@ -171,43 +231,12 @@ All Stories → Story 12
 - ✅ Enhanced user experience
 - ✅ Ready for comprehensive testing
 
-## Integration Pattern
-
-Each story now follows this pattern:
-
-### 🔄 **Enhancement Pattern** (vs. Creation Pattern)
-1. **Identify Integration Point**: Locate placeholder or basic component to enhance
-2. **Implement Feature**: Build the actual functionality
-3. **Replace Placeholder**: Seamlessly integrate into existing layout
-4. **Update Related Components**: Enhance connected components as needed
-5. **Prepare Next Integration**: Set up placeholders/hooks for future stories
-
-### 📋 **Example Integration Flow**
-```typescript
-// Story 01.1: Create placeholder
-<Card>
-  <Typography>File Upload (Coming Soon)</Typography>
-  <Button disabled>Upload Files</Button>
-</Card>
-
-// Story 05: Replace with actual component
-<Card>
-  <FileUploadSection onFilesUploaded={handleFiles} />
-</Card>
-
-// Story 08: Enhance with status integration
-<Card>
-  <FileUploadSection 
-    onFilesUploaded={handleFiles}
-    onStatusUpdate={updateJobStatus}
-  />
-</Card>
-```
-
 ## Quality Standards (Enhanced)
 
 Each story includes:
 - **SMART Criteria:** Specific, Measurable, Achievable, Relevant, Time-bound
+- **Latest Versions:** All dependencies updated to current stable versions
+- **Modern Practices:** Vite, TypeScript strict mode, performance monitoring
 - **Integration Points:** Clear definition of how it enhances existing application
 - **Detailed Acceptance Criteria:** Clear definition of done with integration focus
 - **Technical Requirements:** Specific implementation details building on existing code
@@ -216,7 +245,7 @@ Each story includes:
 
 ## Getting Started (Updated)
 
-1. **Start with Foundation**: Complete Stories 01 and 01.1 for immediate working application
+1. **Start with Foundation**: Complete Stories 01 (updated) and 01.1 for immediate working application
 2. **Add Authentication**: Stories 03 and 04 for user management
 3. **Build Core Features**: Stories 05-09 for main PDF conversion functionality
 4. **Add Integrations**: Stories 10-11 for cloud integration and polish
@@ -224,6 +253,10 @@ Each story includes:
 
 ## Notes
 
+- **Modern Stack**: All dependencies updated to latest stable versions (January 2025)
+- **Vite Preferred**: Better performance than Create React App for new projects
+- **React 19**: Latest stable version with improved features and performance
+- **Material-UI v7**: Latest version with enhanced theming and components
 - **Continuous Integration**: Application is always in a working, demonstrable state
 - **Risk Reduction**: No big-bang integration; issues caught early
 - **Team Efficiency**: Clear handoff points between frontend and backend teams
