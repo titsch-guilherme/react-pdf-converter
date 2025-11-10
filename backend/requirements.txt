@@ -1,0 +1,12 @@
+# Core dependencies - Latest stable versions (January 2025)
+fastapi==0.121.1
+uvicorn[standard]==0.38.0
+python-multipart==0.0.20
+aiofiles==25.1.0
+python-dotenv==1.2.1
+httpx==0.28.1
+loguru==0.7.3
+slowapi==0.1.9
+pydantic==2.12.4
+pydantic-settings==2.12.0
+python-magic==0.4.27
