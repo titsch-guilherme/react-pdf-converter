@@ -32,13 +32,55 @@
 - Versioned API endpoints (/api/v1/) for backward compatibility
 - Clear error codes and messages for debugging and user feedback
 
-## 5. Testing and Observability
-- Automated tests for both batch and single file flows
+## 5. Testing and Observability - **CRITICAL REQUIREMENTS**
+
+### **🚨 MANDATORY TEST COVERAGE REQUIREMENTS**
+- **MINIMUM 90% test coverage is REQUIRED for all code**
+- **ALL tests MUST pass before any code can be merged**
+- **NO EXCEPTIONS: Failing tests or insufficient coverage blocks deployment**
+
+### Test Coverage Standards
+- **Statements:** ≥90% (no exceptions)
+- **Branches:** ≥90% (no exceptions)  
+- **Functions:** ≥90% (no exceptions)
+- **Lines:** ≥90% (no exceptions)
+
+### Testing Requirements by Component Type
+- **Frontend (React):**
+  - Unit tests for all components, hooks, and utilities
+  - Integration tests for component interactions
+  - E2E tests for critical user flows
+  - Mock all external dependencies (APIs, browser APIs)
+  - Test error states, loading states, and edge cases
+
+- **Backend (Python):**
+  - Unit tests for all services, utilities, and models
+  - Integration tests for API endpoints
+  - Database integration tests
+  - Mock external services (Google APIs, OCR services)
+  - Test batch processing scenarios and error handling
+
+### **Automated Test Enforcement**
+- CI/CD pipeline MUST enforce test coverage thresholds
+- Pull requests CANNOT be merged without passing tests
+- Coverage reports MUST be generated and reviewed
+- Performance regression tests for critical paths
+- Security testing for authentication and file validation
+
+### **Test Quality Standards**
+- Tests MUST be deterministic and reliable
+- No flaky tests allowed in main branch
+- Test data MUST be isolated and cleaned up
+- Tests MUST run in parallel without conflicts
+- Mock external dependencies consistently
+
+### Monitoring and Observability
 - Error monitoring/logging should include per-file job info and user context
 - CI/CD must test and deploy multi-file flows as a requirement
 - Load testing for concurrent users and batch processing
 - Security testing for authentication and file validation
 - Performance monitoring for conversion times and resource usage
+- Real-time alerting for test failures and coverage drops
 
 ## 6. Reliability
 - Gracefully handle errors/timeouts per file and overall batch
@@ -50,20 +92,24 @@
 
 ## 7. Technology Stack and Dependency Management
 
-### Frontend (React.js)
+### Frontend (React.js) - **UPDATED VERSIONS**
 - **Node.js:** v20.x LTS
-- **React:** ^18.x (latest stable)
-- **react-router-dom:** ^6.x (routing)
-- **@mui/material:** ^5.x (Material UI for design system)
-- **@mui/icons-material:** ^5.x (Material icons)
-- **react-dropzone:** ^14.x (drag-and-drop file uploads)
-- **axios:** ^1.x (HTTP client with interceptors for session management)
+- **React:** ^19.2.0 (latest stable) ⬆️
+- **TypeScript:** ^5.9.3 ⬆️
+- **react-router-dom:** ^7.9.5 (latest) ⬆️
+- **@mui/material:** ^7.3.5 (latest Material UI) ⬆️
+- **@mui/icons-material:** ^7.3.5 ⬆️
+- **@emotion/react:** ^11.14.0 (required for MUI v7) 🆕
+- **@emotion/styled:** ^11.14.1 (required for MUI v7) 🆕
+- **react-dropzone:** ^14.3.8 (drag-and-drop file uploads)
+- **axios:** ^1.13.2 (HTTP client with interceptors for session management)
 - **google-auth-library / gapi-script:** (for Google OAuth/Drive integration; use official Google APIs)
-- **react-toastify:** ^9.x (notifications & toasts)
-- **dotenv:** ^16.x (environment variables in development)
-- **eslint & prettier:** (for linting and formatting, latest stable)
-- **jest & @testing-library/react:** (unit and integration testing)
-- **cypress:** ^13.x (E2E testing)
+- **react-toastify:** ^11.0.5 (notifications & toasts) ⬆️
+- **web-vitals:** ^5.1.0 (performance monitoring) 🆕
+- **vite:** ^7.2.2 (build tool - preferred over CRA) 🆕
+- **eslint:** ^9.39.1 & **prettier:** ^3.6.2 (latest) ⬆️
+- **jest:** ^30.2.0 & **@testing-library/react:** ^16.3.0 (latest testing) ⬆️
+- **husky:** ^9.1.7 & **lint-staged:** ^15.2.11 (git hooks) 🆕
 
 ### Backend (Python API)
 - **Python:** 3.11.x (latest supported stable version)
@@ -164,7 +210,20 @@
 - Concurrent user and job counts
 - Resource utilization (CPU, memory, disk)
 - Session management metrics
+- **Test coverage metrics and trends**
+- **Test execution time and reliability**
 
 ---
 
-This architecture emphasizes maintainability, security, and scalability while providing clear guidelines for implementation teams. The phased approach allows for MVP delivery while planning for future enhancements based on user feedback and growth requirements.
+## **🚨 CRITICAL: Test Coverage Enforcement**
+
+This architecture emphasizes maintainability, security, and scalability while **MANDATING comprehensive test coverage**. The phased approach allows for MVP delivery while ensuring **ZERO COMPROMISE on code quality and test coverage**.
+
+### **Enforcement Mechanisms:**
+1. **CI/CD Pipeline Blocks:** Deployments blocked if coverage < 90%
+2. **Pull Request Gates:** Cannot merge without passing tests
+3. **Daily Coverage Reports:** Team visibility on coverage trends
+4. **Performance Monitoring:** Test execution time tracking
+5. **Quality Gates:** Automated quality checks at every stage
+
+**Remember: Failing tests and insufficient coverage are NOT acceptable under any circumstances. Quality is non-negotiable.**
