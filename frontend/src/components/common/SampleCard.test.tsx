@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material/styles';
 import { SampleCard } from './SampleCard';
 import { theme } from '@/styles/theme';
@@ -6,6 +7,11 @@ import { theme } from '@/styles/theme';
 // Mock the toast utilities
 jest.mock('@/utils/toast', () => ({
   showSuccess: jest.fn(),
+}));
+
+// Mock the performance utilities
+jest.mock('@/utils/performance', () => ({
+  measureCustomMetric: jest.fn(),
 }));
 
 // Mock the responsive hook
@@ -32,85 +38,70 @@ describe('SampleCard Component', () => {
     jest.clearAllMocks();
   });
 
-  test('renders card title', () => {
-    renderWithTheme(<SampleCard />);
-    const titleElement = screen.getByText(/PDF OCR Converter/i);
-    expect(titleElement).toBeInTheDocument();
-  });
-
-  test('renders card description', () => {
-    renderWithTheme(<SampleCard />);
-    const descriptionElement = screen.getByText(/Transform your PDF files into searchable documents/i);
-    expect(descriptionElement).toBeInTheDocument();
-  });
-
-  test('renders all feature items', () => {
+  test('renders correctly', () => {
     renderWithTheme(<SampleCard />);
     
-    expect(screen.getByText(/Easy Upload/i)).toBeInTheDocument();
-    expect(screen.getByText(/Secure Processing/i)).toBeInTheDocument();
-    expect(screen.getByText(/Fast OCR/i)).toBeInTheDocument();
+    expect(screen.getByText('PDF OCR Converter')).toBeInTheDocument();
+    expect(screen.getByText(/Transform your PDF files into searchable documents/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /get started/i })).toBeInTheDocument();
   });
 
-  test('renders feature descriptions', () => {
+  test('displays feature list', () => {
     renderWithTheme(<SampleCard />);
     
-    expect(screen.getByText(/Drag and drop multiple PDF files/i)).toBeInTheDocument();
-    expect(screen.getByText(/Google OAuth authentication/i)).toBeInTheDocument();
-    expect(screen.getByText(/Advanced OCR technology/i)).toBeInTheDocument();
+    expect(screen.getByText('Easy Upload')).toBeInTheDocument();
+    expect(screen.getByText('Secure Processing')).toBeInTheDocument();
+    expect(screen.getByText('Fast OCR')).toBeInTheDocument();
+    expect(screen.getByText('Drag and drop multiple PDF files for batch processing')).toBeInTheDocument();
   });
 
-  test('renders Get Started button', () => {
-    renderWithTheme(<SampleCard />);
-    const buttonElement = screen.getByRole('button', { name: /Get Started/i });
-    expect(buttonElement).toBeInTheDocument();
-  });
-
-  test('calls showSuccess when Get Started button is clicked', async () => {
-    const { showSuccess } = await import('@/utils/toast');
+  test('handles get started button click', async () => {
+    const { showSuccess } = require('@/utils/toast');
     
     renderWithTheme(<SampleCard />);
-    const buttonElement = screen.getByRole('button', { name: /Get Started/i });
     
-    fireEvent.click(buttonElement);
+    const getStartedButton = screen.getByRole('button', { name: /get started/i });
+    fireEvent.click(getStartedButton);
     
-    expect(showSuccess).toHaveBeenCalledWith('Welcome to PDF OCR Converter! 🎉');
+    await waitFor(() => {
+      expect(showSuccess).toHaveBeenCalledWith('Welcome to PDF OCR Converter! 🎉');
+    });
   });
 
-  test('renders technology stack information', () => {
-    renderWithTheme(<SampleCard />);
-    const techStackElement = screen.getByText(/Built with React 19, Material-UI v7, and TypeScript/i);
-    expect(techStackElement).toBeInTheDocument();
-  });
-
-  test('renders feature icons', () => {
+  test('displays responsive design elements', () => {
     renderWithTheme(<SampleCard />);
     
-    // Check for Material-UI icons by their SVG elements
-    const icons = document.querySelectorAll('svg');
-    expect(icons.length).toBeGreaterThan(0);
+    // Check for Material-UI components
+    expect(screen.getByRole('button', { name: /get started/i })).toHaveClass('MuiButton-root');
+    
+    // Check for icons using data-testid
+    const icons = document.querySelectorAll('[data-testid="CloudUploadIcon"], [data-testid="SecurityIcon"], [data-testid="SpeedIcon"]');
+    expect(icons.length).toBe(3);
   });
 
-  test('applies hover effects', () => {
+  test('has proper accessibility attributes', () => {
     renderWithTheme(<SampleCard />);
-    const cardElement = document.querySelector('.MuiCard-root');
-    expect(cardElement).toBeInTheDocument();
+    
+    // Check for proper heading structure
+    const heading = screen.getByRole('heading', { name: 'PDF OCR Converter' });
+    expect(heading).toBeInTheDocument();
+    expect(heading.tagName).toBe('H1');
+    
+    const button = screen.getByRole('button', { name: /get started/i });
+    expect(button).toHaveAttribute('type');
   });
 
-  test('renders responsive design for mobile', () => {
-    // Mock mobile responsive hook
-    jest.doMock('@/hooks/useResponsive', () => ({
-      useResponsive: () => ({
-        isMobile: true,
-        isTablet: false,
-        isDesktop: false,
-        isSmallScreen: true,
-        isLargeScreen: false,
-      }),
-    }));
-
+  test('displays technology stack information', () => {
     renderWithTheme(<SampleCard />);
-    const cardElement = document.querySelector('.MuiCard-root');
-    expect(cardElement).toBeInTheDocument();
+    
+    expect(screen.getByText('Built with React 19, Material-UI v7, and TypeScript')).toBeInTheDocument();
+  });
+
+  test('has hover effects and styling', () => {
+    renderWithTheme(<SampleCard />);
+    
+    const card = document.querySelector('.MuiCard-root');
+    expect(card).toBeInTheDocument();
+    expect(card).toHaveStyle('transition: transform 0.2s ease-in-out');
   });
 });

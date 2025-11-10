@@ -41,7 +41,7 @@ describe('Theme Configuration', () => {
   });
 
   test('has correct spacing and shape', () => {
-    expect(theme.spacing(1)).toBe(8);
+    expect(theme.spacing(1)).toBe('8px'); // MUI v5+ returns string with px
     expect(theme.shape.borderRadius).toBe(8);
   });
 

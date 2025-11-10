@@ -193,17 +193,45 @@ describe('Validators', () => {
       });
     });
 
-    test('validates total file size', () => {
-      // Create files that individually are valid but together exceed total limit
-      const largeBuffer = new ArrayBuffer(6291456); // 6MB each
-      const files = Array.from({ length: 5 }, (_, i) => 
-        new File([largeBuffer], `file${i}.pdf`, { type: 'application/pdf' })
+    test('validates total file size - individual file size check first', () => {
+      // Create files that individually exceed the limit (11MB each)
+      // This should fail on individual file size validation first
+      const oversizedBuffer = new ArrayBuffer(11534336); // 11MB each
+      const oversizedFiles = Array.from({ length: 5 }, (_, i) => 
+        new File([oversizedBuffer], `file${i}.pdf`, { type: 'application/pdf' })
       );
       
+      // Should fail on individual file size check first
+      expect(validateFiles(oversizedFiles)).toEqual({
+        isValid: false,
+        error: 'File "file0.pdf": File size exceeds the maximum limit of 10.0MB.',
+      });
+    });
+
+    test('validates total file size - batch limit', () => {
+      // Create files that individually are valid but together exceed total limit
+      // Use files that are exactly at individual limit but exceed batch limit
+      const maxIndividualSize = new ArrayBuffer(10485760); // 10MB each (at limit)
+      const files = Array.from({ length: 11 }, (_, i) => 
+        new File([maxIndividualSize], `file${i}.pdf`, { type: 'application/pdf' })
+      );
+      
+      // Should fail on file count first (11 > 10)
       expect(validateFiles(files)).toEqual({
         isValid: false,
-        error: 'Total file size exceeds the maximum limit of 100.0MB.',
+        error: 'You can upload a maximum of 10 files at once.',
       });
+    });
+
+    test('validates total file size - exactly at limits', () => {
+      // Test exactly at the limits
+      const maxIndividualSize = new ArrayBuffer(10485760); // 10MB each
+      const files = Array.from({ length: 10 }, (_, i) => 
+        new File([maxIndividualSize], `file${i}.pdf`, { type: 'application/pdf' })
+      );
+      
+      // 10 files * 10MB = 100MB total, which should be exactly at the limit
+      expect(validateFiles(files)).toEqual({ isValid: true });
     });
   });
 

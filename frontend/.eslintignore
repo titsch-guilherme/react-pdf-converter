@@ -1,8 +1,0 @@
-dist
-build
-node_modules
-*.config.js
-*.config.ts
-coverage
-public
-.env*

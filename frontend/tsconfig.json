@@ -26,9 +26,9 @@
       "@/context/*": ["src/context/*"],
       "@/styles/*": ["src/styles/*"],
       "@/assets/*": ["src/assets/*"],
-      "@/tests/*": ["src/tests/*"]
+      "@/tests/*": ["src/tests/*"],
+      "@/config/*": ["src/config/*"]
     }
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src"]
 }

@@ -1,4 +1,4 @@
-import { getCLS, getFID, getFCP, getLCP, getTTFB, Metric } from 'web-vitals';
+import { onCLS, onINP, onFCP, onLCP, onTTFB, Metric } from 'web-vitals';
 
 export interface PerformanceMetric {
   name: string;
@@ -50,11 +50,11 @@ export const reportWebVitals = (onPerfEntry?: (metric: PerformanceMetric) => voi
     }
   };
 
-  getCLS(handleMetric);
-  getFID(handleMetric);
-  getFCP(handleMetric);
-  getLCP(handleMetric);
-  getTTFB(handleMetric);
+  onCLS(handleMetric);
+  onINP(handleMetric); // INP replaced FID in web-vitals v4+
+  onFCP(handleMetric);
+  onLCP(handleMetric);
+  onTTFB(handleMetric);
 };
 
 export const logPerformanceMetrics = () => {
@@ -116,7 +116,7 @@ export const observeElementPerformance = (element: Element, name: string) => {
 export const PERFORMANCE_THRESHOLDS = {
   FCP: { good: 1800, poor: 3000 }, // First Contentful Paint
   LCP: { good: 2500, poor: 4000 }, // Largest Contentful Paint
-  FID: { good: 100, poor: 300 },   // First Input Delay
+  INP: { good: 200, poor: 500 },   // Interaction to Next Paint (replaced FID)
   CLS: { good: 0.1, poor: 0.25 },  // Cumulative Layout Shift
   TTFB: { good: 800, poor: 1800 }, // Time to First Byte
 } as const;

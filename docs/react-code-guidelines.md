@@ -1,5 +1,27 @@
 # React Code Guidelines
 
+## **🚨 CRITICAL: Test Coverage Requirements**
+
+### **MANDATORY TESTING STANDARDS**
+- **MINIMUM 90% test coverage REQUIRED for ALL React code**
+- **ALL tests MUST pass before code can be merged**
+- **NO EXCEPTIONS: Failing tests block all deployments**
+
+### **Test Coverage Enforcement:**
+```javascript
+// jest.config.js - MANDATORY configuration
+coverageThreshold: {
+  global: {
+    branches: 90,    // NO EXCEPTIONS
+    functions: 90,   // NO EXCEPTIONS  
+    lines: 90,       // NO EXCEPTIONS
+    statements: 90,  // NO EXCEPTIONS
+  },
+}
+```
+
+---
+
 ## 1. Project Structure
 - Organize by feature or domain (recommended for scalability)
 - For batch functionality, components and hooks for job lists and file-tracking should be grouped logically
@@ -23,43 +45,68 @@ frontend/
 │   ├── components/
 │   │   ├── auth/
 │   │   │   ├── LoginButton.tsx
+│   │   │   ├── LoginButton.test.tsx     # ✅ REQUIRED
 │   │   │   └── AuthGuard.tsx
+│   │   │   └── AuthGuard.test.tsx       # ✅ REQUIRED
 │   │   ├── upload/
 │   │   │   ├── FileUploader.tsx
+│   │   │   ├── FileUploader.test.tsx    # ✅ REQUIRED
 │   │   │   ├── DropZone.tsx
+│   │   │   ├── DropZone.test.tsx        # ✅ REQUIRED
 │   │   │   └── FileList.tsx
+│   │   │   └── FileList.test.tsx        # ✅ REQUIRED
 │   │   ├── status/
 │   │   │   ├── StatusPanel.tsx
+│   │   │   ├── StatusPanel.test.tsx     # ✅ REQUIRED
 │   │   │   ├── FileStatusRow.tsx
+│   │   │   ├── FileStatusRow.test.tsx   # ✅ REQUIRED
 │   │   │   └── BatchActions.tsx
+│   │   │   └── BatchActions.test.tsx    # ✅ REQUIRED
 │   │   └── common/
 │   │       ├── LoadingSpinner.tsx
+│   │       ├── LoadingSpinner.test.tsx  # ✅ REQUIRED
 │   │       └── ErrorBoundary.tsx
+│   │       └── ErrorBoundary.test.tsx   # ✅ REQUIRED
 │   ├── pages/
 │   │   ├── LoginPage.tsx
+│   │   ├── LoginPage.test.tsx           # ✅ REQUIRED
 │   │   └── ConversionPage.tsx
+│   │   └── ConversionPage.test.tsx      # ✅ REQUIRED
 │   ├── hooks/
 │   │   ├── useAuth.ts
+│   │   ├── useAuth.test.ts              # ✅ REQUIRED
 │   │   ├── useBatchStatus.ts
+│   │   ├── useBatchStatus.test.ts       # ✅ REQUIRED
 │   │   ├── useFileUpload.ts
+│   │   ├── useFileUpload.test.ts        # ✅ REQUIRED
 │   │   └── useGoogleDrive.ts
+│   │   └── useGoogleDrive.test.ts       # ✅ REQUIRED
 │   ├── context/
 │   │   ├── AuthContext.tsx
+│   │   ├── AuthContext.test.tsx         # ✅ REQUIRED
 │   │   └── JobsContext.tsx
+│   │   └── JobsContext.test.tsx         # ✅ REQUIRED
 │   ├── api/
 │   │   ├── auth.ts
+│   │   ├── auth.test.ts                 # ✅ REQUIRED
 │   │   ├── conversion.ts
+│   │   ├── conversion.test.ts           # ✅ REQUIRED
 │   │   ├── status.ts
+│   │   ├── status.test.ts               # ✅ REQUIRED
 │   │   └── client.ts
+│   │   └── client.test.ts               # ✅ REQUIRED
 │   ├── utils/
 │   │   ├── fileValidation.ts
+│   │   ├── fileValidation.test.ts       # ✅ REQUIRED
 │   │   ├── errorHandling.ts
+│   │   ├── errorHandling.test.ts        # ✅ REQUIRED
 │   │   └── constants.ts
+│   │   └── constants.test.ts            # ✅ REQUIRED
 │   └── tests/
-│       ├── components/
-│       ├── hooks/
-│       ├── api/
-│       └── utils/
+│       ├── components/                  # ✅ Integration tests
+│       ├── hooks/                       # ✅ Hook integration tests
+│       ├── api/                         # ✅ API integration tests
+│       └── utils/                       # ✅ Utility integration tests
 ```
 
 ## 2. State Management
@@ -343,7 +390,23 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 - Maintain strong type safety (with TypeScript) over job/file states
 - Test UI for batch flows, including rapid uploads, job failures, and edge-cases
 
-## 6. Automated Testing Strategy
+## 6. Automated Testing Strategy - **CRITICAL REQUIREMENTS**
+
+### **🚨 MANDATORY Testing Standards**
+
+#### **Test Coverage Requirements:**
+- **Components:** 100% of public methods and render paths
+- **Hooks:** 100% of all hook logic and state changes
+- **Utilities:** 100% of all functions and edge cases
+- **API Clients:** 100% of all endpoints and error scenarios
+- **Context Providers:** 100% of state management logic
+
+#### **Required Test Types:**
+1. **Unit Tests** (Jest + React Testing Library)
+2. **Integration Tests** (Component interactions)
+3. **Hook Tests** (Custom hook behavior)
+4. **API Tests** (Mocked network calls)
+5. **E2E Tests** (Critical user flows)
 
 ### Testing Structure
 - Use Jest & React Testing Library for unit/integration/component tests
@@ -352,13 +415,14 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 - Test coverage tools (Jest `--coverage`, target >=90%)
 - Place tests in relevant `/src/tests`, alongside components, or mirrored structure
 
-### Testing Examples
+### **MANDATORY Testing Examples**
 ```typescript
-// Example component test
+// ✅ REQUIRED: Component test with full coverage
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { FileUploader } from '../components/upload/FileUploader';
 
 describe('FileUploader', () => {
+  // ✅ REQUIRED: Test all user interactions
   it('handles multiple file selection', async () => {
     const mockOnFilesSelected = jest.fn();
     render(<FileUploader onFilesSelected={mockOnFilesSelected} />);
@@ -376,6 +440,7 @@ describe('FileUploader', () => {
     });
   });
 
+  // ✅ REQUIRED: Test all error scenarios
   it('validates file types and shows errors', async () => {
     const mockOnFilesSelected = jest.fn();
     render(<FileUploader onFilesSelected={mockOnFilesSelected} />);
@@ -390,15 +455,33 @@ describe('FileUploader', () => {
       expect(mockOnFilesSelected).not.toHaveBeenCalled();
     });
   });
+
+  // ✅ REQUIRED: Test loading states
+  it('shows loading state during upload', async () => {
+    const mockOnFilesSelected = jest.fn();
+    render(<FileUploader onFilesSelected={mockOnFilesSelected} disabled />);
+    
+    expect(screen.getByRole('button')).toBeDisabled();
+  });
+
+  // ✅ REQUIRED: Test accessibility
+  it('has proper accessibility attributes', () => {
+    render(<FileUploader onFilesSelected={jest.fn()} />);
+    
+    const input = screen.getByLabelText(/upload files/i);
+    expect(input).toHaveAttribute('aria-describedby');
+    expect(input).toHaveAttribute('accept');
+  });
 });
 
-// Example hook test
+// ✅ REQUIRED: Hook test with full coverage
 import { renderHook, act } from '@testing-library/react';
 import { useBatchStatus } from '../hooks/useBatchStatus';
 
 jest.mock('../api/client');
 
 describe('useBatchStatus', () => {
+  // ✅ REQUIRED: Test all hook states
   it('polls for status updates when jobs are processing', async () => {
     const mockGetJobStatus = jest.fn().mockResolvedValue({
       data: { jobs: [{ job_id: '1', status: 'processing', progress: 50 }] }
@@ -414,20 +497,69 @@ describe('useBatchStatus', () => {
       expect(mockGetJobStatus).toHaveBeenCalled();
     }, { timeout: 200 });
   });
+
+  // ✅ REQUIRED: Test error scenarios
+  it('handles API errors gracefully', async () => {
+    const mockGetJobStatus = jest.fn().mockRejectedValue(new Error('API Error'));
+    
+    const { result } = renderHook(() => useBatchStatus());
+    
+    await waitFor(() => {
+      expect(result.current.error).toBe('Failed to fetch job status');
+    });
+  });
+
+  // ✅ REQUIRED: Test cleanup
+  it('cleans up intervals on unmount', () => {
+    const clearIntervalSpy = jest.spyOn(global, 'clearInterval');
+    const { unmount } = renderHook(() => useBatchStatus());
+    
+    unmount();
+    
+    expect(clearIntervalSpy).toHaveBeenCalled();
+  });
 });
 ```
 
-### E2E Testing Requirements
+### **E2E Testing Requirements - MANDATORY**
 - Automate tests in CI (GitHub Actions, etc.) for all commits/PRs
 - Unit tests for per-file and batch flows with Jest/React Testing Library
 - Test complex state updates and error propagation
 - E2E tests for UI, batch uploads and status handling
-- Test scenarios:
+- **REQUIRED Test Scenarios:**
   - Complete user flow from login to file conversion
   - Batch file upload and status tracking
   - Error handling and recovery
   - Google Drive integration
   - Session management and token refresh
+  - Mobile responsive behavior
+  - Accessibility compliance (WCAG 2.1 AA)
+
+### **Test Quality Gates - ENFORCED**
+```javascript
+// ✅ REQUIRED: Jest configuration
+module.exports = {
+  coverageThreshold: {
+    global: {
+      branches: 90,     // ❌ BLOCKS MERGE if not met
+      functions: 90,    // ❌ BLOCKS MERGE if not met
+      lines: 90,        // ❌ BLOCKS MERGE if not met
+      statements: 90,   // ❌ BLOCKS MERGE if not met
+    },
+  },
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/main.tsx',
+    '!src/vite-env.d.ts',
+    '!src/tests/**/*',
+  ],
+  testMatch: [
+    '<rootDir>/src/**/__tests__/**/*.{ts,tsx}',
+    '<rootDir>/src/**/*.{test,spec}.{ts,tsx}',
+  ],
+};
+```
 
 ## 7. Security & Maintainability
 
@@ -634,3 +766,16 @@ const useFileUpload = () => {
 - Network tab for API debugging
 - Console logging with proper log levels
 - Error boundaries for graceful error handling
+
+---
+
+## **🚨 FINAL REMINDER: TEST COVERAGE IS NON-NEGOTIABLE**
+
+### **Enforcement Summary:**
+1. **90% minimum coverage** - NO EXCEPTIONS
+2. **All tests must pass** - NO EXCEPTIONS  
+3. **CI/CD blocks deployment** if coverage fails
+4. **Pull requests cannot merge** without passing tests
+5. **Daily coverage monitoring** and team accountability
+
+**Remember: Quality is not optional. Test coverage protects our users, our code, and our reputation.**

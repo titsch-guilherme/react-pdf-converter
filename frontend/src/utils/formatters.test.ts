@@ -67,7 +67,6 @@ describe('Formatters', () => {
     });
 
     test('formats relative time correctly', () => {
-      const now = new Date('2024-01-15T12:00:00Z');
       const oneMinuteAgo = new Date('2024-01-15T11:59:00Z');
       const twoHoursAgo = new Date('2024-01-15T10:00:00Z');
       const threeDaysAgo = new Date('2024-01-12T12:00:00Z');
