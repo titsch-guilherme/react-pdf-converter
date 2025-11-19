@@ -52,12 +52,17 @@ include = '\.pyi?$'
 
 [tool.mypy]
 python_version = "3.13"
-ignore_missing_imports = true
-no_strict_optional = true
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
 warn_redundant_casts = true
-warn_unused_ignores = false
-warn_return_any = false
-strict_equality = false
+warn_unused_ignores = true
+warn_return_any = true
+strict_equality = true
+ignore_missing_imports = false
+show_error_codes = true
 
 [tool.pytest.ini_options]
 minversion = "9.0"
@@ -77,3 +82,5 @@ exclude_lines = [
     "raise AssertionError",
     "raise NotImplementedError",
 ]
+# Set minimum coverage threshold
+fail_under = 90

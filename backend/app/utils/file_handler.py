@@ -14,7 +14,7 @@ from app.utils.validation import sanitize_filename
 class FileHandler:
     """Handle file operations for PDF conversion."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.upload_dir = Path(settings.UPLOAD_DIR)
         self.processed_dir = Path(settings.PROCESSED_DIR)
 
@@ -35,7 +35,7 @@ class FileHandler:
         """
         try:
             # Sanitize filename
-            safe_filename = sanitize_filename(file.filename)
+            safe_filename = sanitize_filename(file.filename or "unknown.pdf")
 
             # Create unique filename with job ID
             filename = f"{job_id}_{safe_filename}"
@@ -84,6 +84,28 @@ class FileHandler:
         processed_filename = f"{job_id}_{base_name}_searchable.pdf"
         return str(self.processed_dir / processed_filename)
 
+    def _get_job_file_paths(self, job_id: str) -> list[str]:
+        """
+        Get all file paths associated with a job.
+
+        Args:
+            job_id: Job identifier
+
+        Returns:
+            List of file paths for the job
+        """
+        file_paths = []
+
+        # Find files in upload directory
+        for file_path in self.upload_dir.glob(f"{job_id}_*"):
+            file_paths.append(str(file_path))
+
+        # Find files in processed directory
+        for file_path in self.processed_dir.glob(f"{job_id}_*"):
+            file_paths.append(str(file_path))
+
+        return file_paths
+
     def cleanup_job_files(self, job_id: str) -> bool:
         """
         Clean up all files associated with a job.
@@ -95,23 +117,16 @@ class FileHandler:
             True if cleanup was successful
         """
         try:
+            file_paths = self._get_job_file_paths(job_id)
             files_removed = 0
 
-            # Clean up upload directory
-            for file_path in self.upload_dir.glob(f"{job_id}_*"):
+            for file_path in file_paths:
                 try:
-                    file_path.unlink()
-                    files_removed += 1
+                    if os.path.exists(file_path):
+                        os.unlink(file_path)
+                        files_removed += 1
                 except Exception as e:
-                    logger.error(f"Error removing upload file {file_path}: {e}")
-
-            # Clean up processed directory
-            for file_path in self.processed_dir.glob(f"{job_id}_*"):
-                try:
-                    file_path.unlink()
-                    files_removed += 1
-                except Exception as e:
-                    logger.error(f"Error removing processed file {file_path}: {e}")
+                    logger.error(f"Error removing file {file_path}: {e}")
 
             if files_removed > 0:
                 logger.info(f"Cleaned up {files_removed} files for job {job_id}")

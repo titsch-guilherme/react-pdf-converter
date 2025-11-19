@@ -1,5 +1,6 @@
 """Test conversion service."""
 
+from datetime import UTC, datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -157,8 +158,6 @@ class TestConversionService:
     def test_cleanup_old_jobs(self, service):
         """Test cleaning up old jobs."""
         # Create a job and manually set old timestamp
-        from datetime import datetime, timedelta
-
         job = ConversionJob(
             job_id="old-job",
             filename="old.pdf",
@@ -167,8 +166,8 @@ class TestConversionService:
             file_path="/tmp/old.pdf",
         )
 
-        # Make it old
-        job.created_at = datetime.utcnow() - timedelta(hours=25)
+        # Make it old using timezone-aware datetime
+        job.created_at = datetime.now(UTC) - timedelta(hours=25)
 
         service.jobs["old-job"] = job
         service.user_jobs["user-123"] = ["old-job"]

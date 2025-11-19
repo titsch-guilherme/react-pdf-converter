@@ -1,6 +1,8 @@
 """Application configuration using Pydantic Settings v2."""
 
-from pydantic import Field, validator
+from typing import Any
+
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -66,24 +68,27 @@ class Settings(BaseSettings):
         default=60, description="Rate limit per minute per user"
     )
 
-    @validator("ENVIRONMENT")
-    def validate_environment(cls, v):
+    @field_validator("ENVIRONMENT")
+    @classmethod
+    def validate_environment(cls, v: str) -> str:
         """Validate environment value."""
         allowed = ["development", "testing", "production"]
         if v not in allowed:
             raise ValueError(f"Environment must be one of {allowed}")
         return v
 
-    @validator("LOG_LEVEL")
-    def validate_log_level(cls, v):
+    @field_validator("LOG_LEVEL")
+    @classmethod
+    def validate_log_level(cls, v: str) -> str:
         """Validate log level."""
         allowed = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         if v.upper() not in allowed:
             raise ValueError(f"Log level must be one of {allowed}")
         return v.upper()
 
-    @validator("ALLOWED_HOSTS", pre=True)
-    def parse_allowed_hosts(cls, v):
+    @field_validator("ALLOWED_HOSTS", mode="before")
+    @classmethod
+    def parse_allowed_hosts(cls, v: Any) -> list[str]:
         """Parse allowed hosts from string or list."""
         if isinstance(v, str):
             return [host.strip() for host in v.split(",")]
