@@ -7,24 +7,27 @@ from loguru import logger
 from app.core.config import settings
 
 
-def setup_logging():
+def setup_logging() -> None:
     """Configure loguru logging based on settings."""
     # Remove default handler
     logger.remove()
 
     # Configure format based on environment
     if settings.LOG_FORMAT == "json":
+        # Structured JSON logging for production
         log_format = (
             "{"
             '"time": "{time:YYYY-MM-DD HH:mm:ss.SSS}", '
             '"level": "{level}", '
-            '"message": "{message}", '
             '"module": "{module}", '
             '"function": "{function}", '
-            '"line": {line}'
+            '"line": {line}, '
+            '"message": "{message}", '
+            '"extra": {extra}'
             "}"
         )
     else:
+        # Human-readable format for development
         log_format = (
             "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
             "<level>{level: <8}</level> | "
@@ -34,12 +37,13 @@ def setup_logging():
 
     # Add handler with appropriate configuration
     logger.add(
-        sys.stdout,
+        sys.stderr,
         format=log_format,
         level=settings.LOG_LEVEL,
+        colorize=settings.LOG_FORMAT != "json",
         serialize=settings.LOG_FORMAT == "json",
-        backtrace=settings.DEBUG,
-        diagnose=settings.DEBUG,
+        backtrace=True,
+        diagnose=True,
     )
 
     # Add file handler for production
@@ -48,18 +52,16 @@ def setup_logging():
             "logs/app.log",
             format=log_format,
             level=settings.LOG_LEVEL,
-            serialize=True,
-            rotation="100 MB",
+            rotation="10 MB",
             retention="30 days",
             compression="gz",
-            backtrace=False,
-            diagnose=False,
+            serialize=True,
         )
 
     logger.info(
-        f"Logging configured - Level: {settings.LOG_LEVEL}, Format: {settings.LOG_FORMAT}"
+        f"Logging configured: level={settings.LOG_LEVEL}, format={settings.LOG_FORMAT}"
     )
 
 
-# Configure logging on import
+# Initialize logging when module is imported
 setup_logging()

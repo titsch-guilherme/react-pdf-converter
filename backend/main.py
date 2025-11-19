@@ -9,7 +9,11 @@ from app.api.v1.api import api_router
 # Import logging configuration first
 from app.core import logging  # noqa: F401
 from app.core.config import settings
-from app.core.middleware import LoggingMiddleware, RequestIDMiddleware
+from app.core.middleware import (
+    ErrorHandlingMiddleware,
+    LoggingMiddleware,
+    RequestIDMiddleware,
+)
 
 # Create FastAPI application
 app = FastAPI(
@@ -21,9 +25,10 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# Add middleware
-app.add_middleware(RequestIDMiddleware)
-app.add_middleware(LoggingMiddleware)
+# Add middleware (order matters - first added is outermost)
+app.add_middleware(ErrorHandlingMiddleware)  # Outermost - catches all errors
+app.add_middleware(RequestIDMiddleware)  # Add request ID for tracing
+app.add_middleware(LoggingMiddleware)  # Log requests/responses
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_HOSTS,
@@ -47,6 +52,7 @@ async def health_check():
         "status": "healthy",
         "version": settings.VERSION,
         "environment": settings.ENVIRONMENT,
+        "python_version": "3.13.7",
     }
 
 

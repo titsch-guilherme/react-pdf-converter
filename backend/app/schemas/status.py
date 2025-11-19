@@ -2,11 +2,13 @@
 
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class JobStatus(BaseModel):
     """Status information for a conversion job."""
+
+    model_config = ConfigDict(json_encoders={datetime: lambda v: v.isoformat()})
 
     job_id: str = Field(..., description="Unique job identifier")
     filename: str = Field(..., description="Original filename")
@@ -18,9 +20,6 @@ class JobStatus(BaseModel):
     updated_at: datetime = Field(..., description="Last update timestamp")
     download_url: str | None = Field(None, description="Download URL when completed")
     error: str | None = Field(None, description="Error message if job failed")
-
-    class Config:
-        json_encoders = {datetime: lambda v: v.isoformat()}
 
 
 class BatchStatusResponse(BaseModel):

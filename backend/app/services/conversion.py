@@ -3,7 +3,7 @@
 import asyncio
 import os
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from fastapi import UploadFile
@@ -27,8 +27,9 @@ class ConversionJob:
         self.file_path = file_path
         self.status = "queued"
         self.progress = 0
-        self.created_at = datetime.utcnow()
-        self.updated_at = datetime.utcnow()
+        now = datetime.now(UTC)
+        self.created_at = now
+        self.updated_at = now
         self.download_url: str | None = None
         self.error: str | None = None
         self.output_path: str | None = None
@@ -40,7 +41,7 @@ class ConversionJob:
             self.progress = progress
         if error is not None:
             self.error = error
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.now(UTC)
 
         logger.info(
             f"Job {self.job_id} status updated to {status}",
@@ -222,9 +223,7 @@ class ConversionService:
 
     def cleanup_old_jobs(self, max_age_hours: int = 24):
         """Clean up old jobs and their files."""
-        from datetime import timedelta
-
-        cutoff_time = datetime.utcnow() - timedelta(hours=max_age_hours)
+        cutoff_time = datetime.now(UTC) - timedelta(hours=max_age_hours)
         jobs_to_remove = []
 
         for job_id, job in self.jobs.items():

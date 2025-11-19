@@ -43,7 +43,12 @@ async def convert_pdfs(
                 )
 
                 jobs.append(
-                    JobInfo(job_id=job_id, filename=file.filename, status="queued")
+                    JobInfo(
+                        job_id=job_id,
+                        filename=file.filename or "unknown.pdf",
+                        status="queued",
+                        error=None,
+                    )
                 )
 
                 logger.info(
@@ -67,7 +72,7 @@ async def convert_pdfs(
                 jobs.append(
                     JobInfo(
                         job_id="",
-                        filename=file.filename,
+                        filename=file.filename or "unknown.pdf",
                         status="failed",
                         error=f"Failed to start conversion: {str(e)}",
                     )

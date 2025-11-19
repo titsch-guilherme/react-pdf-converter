@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, status
 from loguru import logger
 
 from app.core.security import oauth_validator, session_manager
-from app.schemas.auth import SessionResponse, TokenValidationRequest
+from app.schemas.auth import SessionResponse, TokenValidationRequest, UserInfo
 
 router = APIRouter()
 
@@ -35,6 +35,12 @@ async def validate_token(request: TokenValidationRequest):
         # Get session data for response
         session = session_manager.get_session(session_id)
 
+        if not session:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to create session",
+            )
+
         logger.info(
             f"User authenticated successfully: {user_info['email']}",
             extra={"user_id": user_info["user_id"], "session_id": session_id},
@@ -44,11 +50,11 @@ async def validate_token(request: TokenValidationRequest):
             session_id=session_id,
             user_id=user_info["user_id"],
             expires_at=session["expires_at"],
-            user_info={
-                "email": user_info["email"],
-                "name": user_info.get("name", ""),
-                "picture": user_info.get("picture", ""),
-            },
+            user_info=UserInfo(
+                email=user_info["email"],
+                name=user_info.get("name", ""),
+                picture=user_info.get("picture", ""),
+            ),
         )
 
     except HTTPException:
